@@ -30,6 +30,7 @@ type Config struct {
 	Cover       bool   `json:"cover"`
 	Filter      string `json:"filter"`
 	Count       string `json:"count"`
+	Watch       bool   `json:"watch"`
 }
 
 // GlobalConfig holds the active configuration for the current process.

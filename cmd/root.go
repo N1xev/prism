@@ -29,6 +29,10 @@ Issues? Requests? Feedback? Let me know! -- github.com/DaltonSW/prism`,
 		}
 	},
 	Run: func(cmd *cobra.Command, args []string) {
+		if internal.GlobalConfig.Watch {
+			internal.Watch(args)
+			return
+		}
 		internal.Execute(args)
 	},
 }
@@ -51,6 +55,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&internal.GlobalConfig.Verbose, "verbose", "v", internal.GlobalConfig.Verbose, "Include test sub-output")
 	rootCmd.PersistentFlags().BoolVarP(&internal.GlobalConfig.OnlyFails, "only-fails", "f", internal.GlobalConfig.OnlyFails, "Only run failing tests")
 	rootCmd.PersistentFlags().BoolVar(&internal.GlobalConfig.NoBar, "no-bar", internal.GlobalConfig.NoBar, "Hide the summary bar at the end of test output")
+	rootCmd.PersistentFlags().BoolVarP(&internal.GlobalConfig.Watch, "watch", "w", internal.GlobalConfig.Watch, "Watch for file changes and rerun tests")
 
 	rootCmd.PersistentFlags().BoolVarP(&internal.GlobalConfig.SummaryOnly, "summary-only", "s", internal.GlobalConfig.SummaryOnly, "Only show the summary, not per-test results")
 	rootCmd.PersistentFlags().StringVarP(&internal.GlobalConfig.Filter, "filter", "F", internal.GlobalConfig.Filter, "Regex to pass to go test -run (e.g. --filter TestFoo)")
