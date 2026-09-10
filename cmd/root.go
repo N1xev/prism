@@ -23,10 +23,14 @@ var rootCmd = &cobra.Command{
 
 Issues? Requests? Feedback? Let me know! -- github.com/DaltonSW/prism`,
 	Args: cobra.ArbitraryArgs,
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		if internal.GlobalConfig.NoColor || (os.Getenv("NO_COLOR") != "" && !internal.GlobalConfig.ShowColor) {
 			internal.UnsetColors()
 		}
+		if cmd.Flags().Changed("count") && internal.GlobalConfig.Count < 0 {
+			return fmt.Errorf("--count must be a non-negative integer, got %d", internal.GlobalConfig.Count)
+		}
+		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		internal.Execute(args)
@@ -54,7 +58,7 @@ func init() {
 
 	rootCmd.PersistentFlags().BoolVarP(&internal.GlobalConfig.SummaryOnly, "summary-only", "s", internal.GlobalConfig.SummaryOnly, "Only show the summary, not per-test results")
 	rootCmd.PersistentFlags().StringVarP(&internal.GlobalConfig.Filter, "filter", "F", internal.GlobalConfig.Filter, "Regex to pass to go test -run (e.g. --filter TestFoo)")
-	rootCmd.PersistentFlags().StringVarP(&internal.GlobalConfig.Count, "count", "c", internal.GlobalConfig.Count, "Set -count=<value> for go test (e.g. --count=1 to disable cache)")
+	rootCmd.PersistentFlags().IntVarP(&internal.GlobalConfig.Count, "count", "c", internal.GlobalConfig.Count, "Set -count=<value> for go test (e.g. --count=1 to disable cache)")
 	rootCmd.PersistentFlags().BoolVarP(&internal.GlobalConfig.Cover, "cover", "C", internal.GlobalConfig.Cover, "Enable coverage reporting")
 
 	rootCmd.PersistentFlags().BoolVar(&internal.GlobalConfig.NoColor, "no-color", internal.GlobalConfig.NoColor, "Disable color output entirely")

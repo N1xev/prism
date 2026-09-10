@@ -35,8 +35,8 @@ func Execute(args []string) {
 		coverProfilePath = filepath.Join(os.TempDir(), fmt.Sprintf("prism-cover-%d.out", os.Getpid()))
 		cmdArgs = append(cmdArgs, "-coverprofile="+coverProfilePath)
 	}
-	if GlobalConfig.Count != "" {
-		cmdArgs = append(cmdArgs, "-count="+GlobalConfig.Count)
+	if GlobalConfig.Count >= 0 {
+		cmdArgs = append(cmdArgs, fmt.Sprintf("-count=%d", GlobalConfig.Count))
 	}
 	if GlobalConfig.Filter != "" {
 		cmdArgs = append(cmdArgs, "-run", GlobalConfig.Filter)

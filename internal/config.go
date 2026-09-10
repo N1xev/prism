@@ -29,7 +29,7 @@ type Config struct {
 	SummaryOnly bool   `json:"summary_only"`
 	Cover       bool   `json:"cover"`
 	Filter      string `json:"filter"`
-	Count       string `json:"count"`
+	Count       int    `json:"count"`
 }
 
 // GlobalConfig holds the active configuration for the current process.
@@ -72,7 +72,7 @@ func ClearConfig() error {
 
 // LoadConfig reads the persisted configuration file, if it exists.
 func LoadConfig() (Config, error) {
-	cfg := Config{}
+	cfg := Config{Count: -1}
 
 	path, err := configFilePath()
 	if err != nil {
